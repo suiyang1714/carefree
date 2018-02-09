@@ -2,13 +2,76 @@ import { controller, get, post, required } from '../decorator/router'
 import { resolve } from 'path'
 import mongoose from 'mongoose'
 
-
-const AdminUser = mongoose.model('AdminUser')
-const Email = mongoose.model('Email')
+const Admin = mongoose.model('Admin')
+const Problem = mongoose.model('Problem')
 
 @controller('/admin')
 export class adminController {
 
+  /* 添加问题审核管理员 */
+  @post('addUser')
+  @required({ body: ['email', 'password', 'nickname'] })
+  async addUser (ctx, next) {
+    const userMsg = ctx.request.body
+
+    /* 邮箱为依据 */
+    let user = await Admin.findOne({
+      email: userMsg.email
+    })
+
+    if (!user) {
+      user = new Admin({
+        email: userMsg.email,
+        password: userMsg.password,
+        nickname: userMsg.nickname
+      })
+
+      await user.save()
+      ctx.body = {
+        success: true
+      }
+    } else {
+      ctx.body = {
+        success: false,
+        err: '邮箱已存在'
+      }
+    }
+  }
+
+  /* 管理员集合 */
+  @get('userList')
+  async fetchUserList (ctx, next) {
+    let { limit = 50 } = ctx.query
+
+    let List = await Admin
+      .find({})
+      .limit(Number(limit))
+      .exec()
+
+    ctx.body = {
+      success: true,
+      data: List
+    }
+  }
+
+  /* 问题集合 */
+  @get('problemList')
+  async fetchProblems (ctx, next) {
+    let { limit = 50 } = ctx.query
+
+    let List = await Problem
+      .find({})
+      .populate('user')
+      .limit(Number(limit))
+      .exec()
+
+    ctx.body = {
+      success: true,
+      data: List
+    }
+  }
+
+  /* 登录 */
   @post('login')
   @required({ body: ['email', 'password']})
   async login (ctx, next) {
@@ -17,7 +80,7 @@ export class adminController {
     let match = null
 
     try {
-      user = await AdminUser.findOne({ email: email }).exec()
+      user = await Admin.findOne({ email: email }).exec()
       console.log(user +"密码错误？")
       if (user) {
         match = await user.comparePassword(password, user.password)
@@ -51,71 +114,13 @@ export class adminController {
 
   }
 
+  /* 登出 */
   @post('logout')
   async logout (ctx, next) {
     ctx.session = null
 
     ctx.body = {
       success: true
-    }
-  }
-
-  @post('addUser')
-  @required({ body: ['email', 'password', 'nickname'] })
-  async addUser (ctx, next) {
-    const userMsg = ctx.request.body
-
-    let user = await AdminUser.findOne({
-      email: userMsg.email
-    })
-
-    if(!user) {
-      user = new AdminUser({
-        email: userMsg.email,
-        password: userMsg.password,
-        nickname: userMsg.nickname
-      })
-
-      await user.save()
-      ctx.body = {
-        success: true
-      }
-    } else {
-      ctx.body = {
-        success: false,
-        err: '邮箱已存在'
-      }
-    }
-  }
-
-  @get('userList')
-  async fetchUserList (ctx, next) {
-    let { limit = 50 } = ctx.query
-
-    let List = await AdminUser
-      .find({})
-      .limit(Number(limit))
-      .exec()
-
-    console.log(List)
-    ctx.body = {
-      success: true,
-      data: List
-    }
-  }
-
-  @get('emailList')
-  async fetchEmailList (ctx, next) {
-    let { limit = 50 } = ctx.query
-
-    let List = await Email
-      .find({})
-      .limit(Number(limit))
-      .exec()
-
-    ctx.body = {
-      success: true,
-      data: List
     }
   }
 }

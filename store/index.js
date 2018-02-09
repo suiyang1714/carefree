@@ -9,7 +9,7 @@ const createStore = () => {
             imageCDN: 'p2op7lrmc.bkt.clouddn.com/',
             user: null,
             users: [],
-            emails: []
+            problems: []
         },
         getters,
         actions,

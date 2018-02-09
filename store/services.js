@@ -6,8 +6,8 @@ class Services {
   fetchUsers (url) {
     return axios.get(`${baseUrl}/admin/userList`)
   }
-  fetchEmails (url) {
-    return axios.get(`${baseUrl}/admin/emailList`)
+  fetchProblems (url) {
+    return axios.get(`${baseUrl}/admin/problemList`)
   }
 }
 export default new Services()

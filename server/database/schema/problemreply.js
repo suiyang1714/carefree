@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-const EmailSchema = new Schema({
-  emailMsg: String,
-  emailType: String,
-  intro: String,
-  solve: {
-    type: Boolean,
-    default: false
+const ProblemReplySchema = new Schema({
+  problem: {
+    type: String,
+    ref: 'Problem'
   },
-  openid: String,
-  nickname: String,
+  reply: String,
+  userId: {
+    type: String,
+    ref: 'Admin'
+  },
   meta: {
     createdAt: {
       type: Date,
@@ -22,7 +22,7 @@ const EmailSchema = new Schema({
     }
   }
 })
-EmailSchema.pre('save', function (next) {
+ProblemReplySchema.pre('save', function (next) {
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {
@@ -32,4 +32,4 @@ EmailSchema.pre('save', function (next) {
   next()
 })
 
-const Email = mongoose.model('Email', EmailSchema)
+const ProblemReply = mongoose.model('ProblemReply', ProblemReplySchema)

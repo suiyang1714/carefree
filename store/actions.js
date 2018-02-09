@@ -55,13 +55,12 @@ export default {
 
     return res
   },
-  async fetchEmails ({ state }) {
+  async fetchProblems ({ state }) {
 
-    const  res = await Services.fetchEmails()
-  console.log(res)
+    const  res = await Services.fetchProblems()
 
-    state.emails = res.data.data
+    state.problems = res.data.data
 
     return res
-  },
+  }
 }

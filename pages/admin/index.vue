@@ -58,8 +58,7 @@
         isProduct: false,
         openSnackbar: false,
         edited: {
-          images: [],
-          parameters: []
+
         },
         editing: false
       }

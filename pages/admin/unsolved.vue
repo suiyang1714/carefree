@@ -4,20 +4,24 @@
       table.table
         thead
           tr
+            th 头像
             th openId
             th 用户昵称
             th 邮件类型
             th 邮件信息
             th 操作
         tbody
-          tr(v-for='item in emails', v-if="!item.solve")
-              td {{item.openid}}
-              td {{item.nickname}}
-              td {{item.emailMsg}}
-              td {{item.emailType}}
+          tr(v-for='item in problems', v-if="!item.solve")
               td
-              button.btn(@click='eidtReply(item)')
-                .material-icon(style='font-size: 20px') 回信
+                .img
+                  img(:src='item.user.avatarUrl')
+              td {{item.user.openid}}
+              td {{item.user.nickname}}
+              td {{item.problem}}
+              td {{item.problemType}}
+              td
+                button.btn(@click='eidtReply(item)', style="margin: 0 auto;")
+                  .material-icon(style='font-size: 20px') 回信
 
     .edit-product(:class='{active: editing}')
       .edit-header
@@ -38,10 +42,10 @@
         .form.edit-form(v-if='isProduct')
           .input-group
             label openId
-            input(v-model='edited.openid')
+            input(v-model='edited.user.openid')
           .input-group
             label nickName
-            input(v-model='edited.nickname')
+            input(v-model='edited.user.nickname')
           .input-group
             label 回信内容
             textarea(v-model='edited.reply', @keyup='editedIntro')
@@ -64,7 +68,7 @@
     layout: 'admin',
     head () {
       return {
-        title: '未解决回信列表'
+        title: '未解决问题列表'
       }
     },
     data () {
@@ -72,20 +76,22 @@
         isProduct: false,
         openSnackbar: false,
         edited: {
-          openid: String,
-          nickname: String
+          user: {
+            openid: String,
+            nickname: String
+          }
         },
         editing: false
       }
     },
     async created () {
-      this.$store.dispatch('fetchUsers')
+      this.$store.dispatch('fetchProblems')
     },
     mounted () {
         //待写
     },
     computed: mapState([
-      'emails'
+      'problems'
     ]),
     methods: {
       editedIntro (e) {

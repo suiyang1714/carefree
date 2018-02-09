@@ -4,7 +4,7 @@
             li
                 nuxt-link(to='/admin') 管理员列表
             li
-              nuxt-link(to='/admin/emails') 收取邮件
+              nuxt-link(to='/admin/problem') 收取邮件
             li
               nuxt-link(to='/admin/unsolved') 未解决邮件
             li

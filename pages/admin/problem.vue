@@ -4,14 +4,18 @@
       table.table
         thead
           tr
+            th 头像
             th 用户昵称
-            th 邮件类型
-            th 邮件信息
+            th 问题类型
+            th 问题内容
         tbody
-          tr(v-for='item in emails')
-            td {{item.nickname}}
-            td {{item.emailType}}
-            td {{item.emailMsg}}
+          tr(v-for='item in problems')
+            td
+              .img
+                img(:src='item.user.avatarUrl')
+            td {{item.user.nickname}}
+            td {{item.problemType}}
+            td {{item.problem}}
 </template>
 
 <script>
@@ -24,25 +28,21 @@
     layout: 'admin',
     head () {
       return {
-        title: '邮件列表'
+        title: '问题列表'
       }
     },
     data () {
       return {
         isProduct: false,
         openSnackbar: false,
-        edited: {
-          images: [],
-          parameters: []
-        },
         editing: false
       }
     },
     async created () {
-      this.$store.dispatch('fetchEmails')
+      this.$store.dispatch('fetchProblems')
     },
     computed: mapState([
-      'emails'
+      'problems'
     ]),
     methods: {
 

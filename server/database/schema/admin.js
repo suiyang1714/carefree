@@ -8,7 +8,7 @@ const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 const Mixed = Schema.Types.Mixed
 
-const AdminUserSchema = new Schema({
+const AdminSchema = new Schema({
   email: String,
   password: String,
   nickname: String,
@@ -28,7 +28,7 @@ const AdminUserSchema = new Schema({
   }
 })
 
-AdminUserSchema.pre('save', function(next) {
+AdminSchema.pre('save', function(next) {
   if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
   } else {
@@ -38,7 +38,7 @@ AdminUserSchema.pre('save', function(next) {
   next()
 })
 
-AdminUserSchema.pre('save', function(next) {
+AdminSchema.pre('save', function(next) {
   var user = this
 
   if (!user.isModified('password')) return next()
@@ -54,7 +54,7 @@ AdminUserSchema.pre('save', function(next) {
   })
 })
 
-AdminUserSchema.methods = {
+AdminSchema.methods = {
   comparePassword: function (_password, password) {
     return new Promise((resolve, reject) => {
       bcrypt.compare(_password, password, function(err, isMatch) {
@@ -100,4 +100,4 @@ AdminUserSchema.methods = {
   }
 }
 
-const AdminUser = mongoose.model('AdminUser', AdminUserSchema)
+const Admin = mongoose.model('Admin', AdminSchema)

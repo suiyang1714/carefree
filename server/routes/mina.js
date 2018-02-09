@@ -8,35 +8,31 @@ import {
 
 
 const MinaUser = mongoose.model('MinaUser')
-const Email = mongoose.model('Email')
+const Problem = mongoose.model('Problem')
 
 @controller('/mina')
 export class minaController {
 
-  @get('/savelMsg')
-  @required({ query: ['emailMsg', 'emailType', 'openid', 'nickname'] })
-  async savelMsg (ctx, next) {
-    const {emailMsg, emailType, openid, nickname} = ctx.query
+  @get('poseProblem')
+  @required({ query: ['problem', 'problemType', 'openid'] })
+  async poseProblem (ctx, next) {
+    const { problem, problemType, openid } = ctx.query
 
-    console.log(ctx.query)
-    let email = new Email({
-      emailMsg: emailMsg,
-      emailType: emailType,
-      openid: openid,
-      nickname: nickname
-    })
-    await email.save()
-
-    let user =  await MinaUser
+    /* 通过 openid 读取 user 信息 */
+    let user = await MinaUser
       .findOne({
         openid: openid
       })
       .exec()
 
-    user.emailArray.push(email._id)
+    let aProblem = new Problem({
+      problem: problem,
+      problemType: problemType,
+      openid: openid,
+      user: user._id
+    })
 
-    await user.save()
-
+    await aProblem.save()
 
     ctx.body = {
       success: true
@@ -65,7 +61,7 @@ export class minaController {
       openid: minaUser.openId
     }).exec()
 
-    if (!user){
+    if (!user) {
       let pc = new WXBizDataCrypt(minaUser.session_key)
 
       let data = pc.decryptData(encryptedData, iv)
@@ -104,10 +100,11 @@ export class minaController {
   @post('login')
   @required({ body: ['code', 'avatarUrl', 'nickName'] })
   async login (ctx, next) {
-    const{
-      codem,
+
+    const {
+      code,
       avatarUrl,
-      nickName,
+      nickName
     } = ctx.request.body
 
     // unionid 跨平台id
@@ -118,8 +115,8 @@ export class minaController {
         unionid
       }).exec()
 
-      if(!user) {
-        user = new User({
+      if (!user) {
+        user = new User ({
           openid: [openid],
           nickname: nickName,
           unionid,
@@ -140,7 +137,7 @@ export class minaController {
           avatarUrl: avatarUrl
         }
       }
-    } catch (e){
+    } catch (e) {
       ctx.body = {
         success: false,
         err: e

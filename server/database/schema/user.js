@@ -10,12 +10,6 @@ const Mixed = Schema.Types.Mixed
 
 
 const UserSchema = new Schema({
-  emailArray:[
-    {
-      type: String,
-      ref: 'email'
-    }
-  ],
   openid: String,
   avatarUrl: String,
   nickname: String,
