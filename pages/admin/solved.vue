@@ -5,10 +5,10 @@
         thead
           tr
             th 头像
-            th openId
             th 用户昵称
             th 邮件类型
             th 邮件信息
+            th 回复
             th 操作
         tbody
           tr(v-for='item in problems', v-if="!item.solve")

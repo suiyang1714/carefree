@@ -62,5 +62,12 @@ export default {
     state.problems = res.data.data
 
     return res
+  },
+  async addReply ({ state }, reply) {
+
+    reply.email = state.user.email
+    await axios.post('/admin/addReply', reply)
+
+    return { success: true }
   }
 }

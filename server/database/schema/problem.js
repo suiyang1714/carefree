@@ -17,7 +17,7 @@ const ProblemSchema = new Schema({
     default: false
   },
   reply: {
-    type: Object,
+    type: String,
     ref: 'ProblemReply'
   },
   meta: {

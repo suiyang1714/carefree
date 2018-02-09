@@ -4,9 +4,41 @@ import mongoose from 'mongoose'
 
 const Admin = mongoose.model('Admin')
 const Problem = mongoose.model('Problem')
+const ProblemReply = mongoose.model('ProblemReply')
 
 @controller('/admin')
 export class adminController {
+
+  /* 问题回复 */
+  @post('addReply')
+  @required({ body: ['_id', 'reply'] })
+  async addReply (ctx, next) {
+    const replyMsg = ctx.request.body
+
+    /* 保存回复 */
+    let user = await Admin.findOne({
+      email: replyMsg.email
+    })
+
+    const reply = new ProblemReply({
+      adminUser: user._id,
+      problem: replyMsg._id,
+      reply: replyMsg.reply
+    })
+    /* 将reply._id 添加进Problem.reply */
+    let problem = await Problem.findOne({
+      _id: replyMsg._id
+    })
+
+    problem.reply = reply._id
+    problem.solve = true
+
+    await problem.save()
+    await reply.save()
+    ctx.body = {
+      success: true
+    }
+  }
 
   /* 添加问题审核管理员 */
   @post('addUser')

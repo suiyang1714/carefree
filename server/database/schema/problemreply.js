@@ -7,7 +7,7 @@ const ProblemReplySchema = new Schema({
     ref: 'Problem'
   },
   reply: String,
-  userId: {
+  adminUser: {
     type: String,
     ref: 'Admin'
   },
