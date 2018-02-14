@@ -1,4 +1,4 @@
-import { controller, get, post, required } from '../decorator/router'
+import { controller, get, post, required, del } from '../decorator/router'
 import { resolve } from 'path'
 import mongoose from 'mongoose'
 
@@ -8,6 +8,31 @@ const ProblemReply = mongoose.model('ProblemReply')
 
 @controller('/admin')
 export class adminController {
+
+  /* 删除邮件回复 */
+  @get('deleteReply')
+  async deleteReply (ctx, next) {
+    const _id = ctx.query._id
+    if(!_id) return (ctx.body = { success: false, err: '_id is required' })
+
+    let reply =  await ProblemReply
+      .findOne({_id: _id})
+      .exec()
+    let problem = await Problem
+      .findOne({_id: reply.problem})
+      .exec()
+
+    if(problem){
+      await ProblemReply.remove({_id: _id})
+      problem.solve = false
+      problem.reply = ''
+      await problem.save()
+
+      ctx.body = {
+        success: true
+      }
+    }
+  }
 
   /* 回复列表 */
   @get('replyList')
@@ -24,7 +49,6 @@ export class adminController {
       })
       .exec()
 
-    console.log(list)
     ctx.body = {
       success: true,
       data: list

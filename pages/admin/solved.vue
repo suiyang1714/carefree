@@ -61,11 +61,10 @@
       'user'
     ]),
     methods: {
-      async eidtDelete (index) {
-        const result = await this.$store.dispatch('deleteReply')
+      async eidtDelete (item) {
+        const result = await this.$store.dispatch('deleteReply', item._id)
         if(result.success){
-          openSnackbar = true;
-          this.edited.splice(index, 1);
+          this.openSnackbar = true;
         }
       }
     },

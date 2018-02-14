@@ -12,5 +12,8 @@ class Services {
   fetchProblemReply (){
     return axios.get(`${baseUrl}/admin/replyList`)
   }
+  deleteReply (_id) {
+    return axios.get(`${baseUrl}/admin/deleteReply?_id=${_id}`)
+  }
 }
 export default new Services()
