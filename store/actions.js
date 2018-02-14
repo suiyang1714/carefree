@@ -69,5 +69,13 @@ export default {
     await axios.post('/admin/addReply', reply)
 
     return { success: true }
+  },
+  async fetchProblemReply ({ state }) {
+
+    const  res = await Services.fetchProblemReply()
+
+    state.problemReply = res.data.data
+
+    return res
   }
 }

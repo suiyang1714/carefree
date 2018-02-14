@@ -9,6 +9,29 @@ const ProblemReply = mongoose.model('ProblemReply')
 @controller('/admin')
 export class adminController {
 
+  /* 回复列表 */
+  @get('replyList')
+  async fetchReply ( ctx, next ) {
+
+    let list = await ProblemReply
+      .find({})
+      .populate('adminUser')
+      .populate({
+        path: 'problem',
+        populate: {
+          path: 'user'
+        }
+      })
+      .exec()
+
+    console.log(list)
+    ctx.body = {
+      success: true,
+      data: list
+    }
+  }
+
+
   /* 问题回复 */
   @post('addReply')
   @required({ body: ['_id', 'reply'] })

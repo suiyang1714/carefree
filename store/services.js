@@ -9,5 +9,8 @@ class Services {
   fetchProblems (url) {
     return axios.get(`${baseUrl}/admin/problemList`)
   }
+  fetchProblemReply (){
+    return axios.get(`${baseUrl}/admin/replyList`)
+  }
 }
 export default new Services()

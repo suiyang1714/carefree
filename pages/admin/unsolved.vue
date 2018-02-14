@@ -5,23 +5,23 @@
         thead
           tr
             th 头像
-            th openId
             th 用户昵称
             th 邮件类型
             th 邮件信息
+            th 回复
             th 操作
         tbody
           tr(v-for='item in problems', v-if="!item.solve")
-              td
-                .img
-                  img(:src='item.user.avatarUrl')
-              td {{item.user.openid}}
-              td {{item.user.nickname}}
-              td {{item.problem}}
-              td {{item.problemType}}
-              td
-                button.btn(@click='eidtReply(item)', style="margin: 0 auto;")
-                  .material-icon(style='font-size: 20px') 回信
+            td
+              .img
+                img(:src='item.user.avatarUrl')
+            td {{item.user.openid}}
+            td {{item.user.nickname}}
+            td {{item.problem}}
+            td {{item.problemType}}
+            td
+              button.btn(@click='eidtReply(item)', style="margin: 0 auto;")
+                .material-icon(style='font-size: 20px') 回信
 
     .edit-product(:class='{active: editing}')
       .edit-header
@@ -95,7 +95,7 @@
       this.$store.dispatch('fetchProblems')
     },
     mounted () {
-        //待写
+      //待写
     },
     computed: mapState([
       'problems',
