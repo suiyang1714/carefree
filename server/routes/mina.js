@@ -9,9 +9,50 @@ import {
 
 const MinaUser = mongoose.model('MinaUser')
 const Problem = mongoose.model('Problem')
+const ProblemReply = mongoose.model('ProblemReply')
 
 @controller('/mina')
 export class minaController {
+
+  /* 用户是否满意 */
+  @get('isSatisfied')
+  @required({query: ['_id'] })
+  async isSatisfied (ctx, next ) {
+    const { _id, satisfaction } = ctx.query
+    let reply = await Problem
+      .findOne({ _id: _id})
+      .exec()
+
+    reply.satisfaction = satisfaction
+    reply.save()
+
+    ctx.body = {
+      success: true
+    }
+  }
+
+  /* 判断是否有回信 */
+  @get('isReply')
+  @required({query: ['_id'] })
+  async isReply (ctx, next) {
+    const { _id } = ctx.query
+
+    let reply = await Problem
+      .find({ user: _id, solve: true})
+      .populate({
+        path: 'reply'
+      })
+      .exec()
+    const array = reply
+    array.forEach(function (item) {
+      if (item.solve && item.reply.isUserAccess == false) {
+        return ctx.body = {
+          success: true,
+          data: reply
+        }
+      }
+    })
+  }
 
   @get('poseProblem')
   @required({ query: ['problem', 'problemType', 'openid'] })
