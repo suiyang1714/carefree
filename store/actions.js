@@ -59,6 +59,7 @@ export default {
 
     const  res = await Services.fetchProblems()
 
+    console.log(res.data.data)
     state.problems = res.data.data
 
     return res

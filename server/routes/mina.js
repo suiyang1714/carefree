@@ -164,13 +164,20 @@ export class minaController {
   @get('isSatisfied')
   @required({query: ['_id'] })
   async isSatisfied (ctx, next ) {
-    const { _id, satisfaction } = ctx.query
-    let reply = await Problem
+    const { _id, satisfaction, reply_id } = ctx.query
+
+    let preblem = await Problem
       .findOne({ _id: _id})
       .exec()
 
-    reply.satisfaction = satisfaction
-    reply.save()
+    let reply = await ProblemReply
+      .findOne({ _id: reply_id})
+      .exec()
+
+    preblem.satisfaction = satisfaction
+    reply.isUserAccess = true
+    await preblem.save()
+    await reply.save()
 
     ctx.body = {
       success: true
@@ -182,7 +189,7 @@ export class minaController {
   @required({query: ['_id'] })
   async isReply (ctx, next) {
     const { _id } = ctx.query
-
+    console.log(_id)
     let reply = await Problem
       .find({ user: _id, solve: true})
       .populate({
@@ -196,14 +203,14 @@ export class minaController {
         if (item.solve && item.reply.isUserAccess == false) {
           return ctx.body = {
             success: true,
-            data: reply
+            data: item
           }
         }
+
+        return ctx.body = {
+          success: false
+        }
       })
-    } else {
-      return ctx.body = {
-        success: false
-      }
     }
   }
 

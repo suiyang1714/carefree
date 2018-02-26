@@ -140,6 +140,7 @@ export class adminController {
     let List = await Problem
       .find({})
       .populate('user')
+      .populate('reply')
       .limit(Number(limit))
       .exec()
 

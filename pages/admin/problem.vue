@@ -8,7 +8,7 @@
             th 用户昵称
             th 问题类型
             th 问题内容
-            th 是否解决
+            th 是否回信
             th 满意度
         tbody
           tr(v-for='item in problems')
@@ -18,8 +18,8 @@
             td {{item.user.nickname}}
             td {{item.problemType}}
             td {{item.problem}}
-            td( v-text='item.solve ? "已解决": "未解决"')
-            td( v-text='item.solve ? item.satisfaction ? "满意": "不满意": "待评价"')
+            td( v-text='item.solve ? "已回信": "未回信"')
+            td( v-text='item.solve ? item.reply.isUserAccess ? item.satisfaction ? "满意": "不满意" : "待评价" : "待评价"')
 </template>
 
 <script>
