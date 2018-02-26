@@ -11,6 +11,10 @@ const ProblemReplySchema = new Schema({
     type: String,
     ref: 'Admin'
   },
+  isUserAccess:{
+    type: Boolean,
+    default: false
+  },
   meta: {
     createdAt: {
       type: Date,

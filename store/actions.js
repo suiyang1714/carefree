@@ -69,5 +69,21 @@ export default {
     await axios.post('/admin/addReply', reply)
 
     return { success: true }
+  },
+  async fetchProblemReply ({ state }) {
+
+    const  res = await Services.fetchProblemReply()
+
+    state.problemReply = res.data.data
+
+    return res
+  },
+  async deleteReply ({ state, dispatch }, id) {
+    const res = await Services.deleteReply(id)
+    /*const res =  await axios.post('/admin/deleteReply', id)*/
+    let list = await dispatch('fetchProblemReply')
+
+    return res.data
+
   }
 }

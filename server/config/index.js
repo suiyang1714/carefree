@@ -7,7 +7,7 @@ export default {
     token: 'mydotamessagetoken'
   },
   mina: {
-    appid: 'wxf0973dd1471a489c',
-    secret: '4384544943140bae6e939c8a4afd6d45'
+    appid: 'wxdc92da0a2b0633e2',
+    secret: '7299e6e93cc49e7e6abd9190fb4afa74'
   }
 }

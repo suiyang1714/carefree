@@ -34,7 +34,6 @@ export default class Route {
   }
 
   init () {
-    console.log('走过这')
     glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
 
     _.forIn(routersMap, (value, key) => {

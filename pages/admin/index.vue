@@ -67,14 +67,9 @@
       this.$store.dispatch('fetchUsers')
     },
     mounted () {
-      let polyline = document.querySelector('#outline')
-      let totalLength = polyline.getTotalLength()
 
-      this.upload.dasharray = totalLength
-      this.upload.dashoffset = totalLength
     },
     computed: mapState([
-      'imageCDN',
       'users'
     ]),
     methods: {
@@ -107,15 +102,6 @@
         }
 
         this.editing = !this.editing
-      },
-      removeParameter (index) {
-        this.edited.parameters.splice(index, 1)
-      },
-      addParameter () {
-        this.edited.parameters.push({ key: '', value: '' })
-      },
-      deleteImg (index) {
-        this.edited.images.splice(index, 1)
       }
     },
     components: {
