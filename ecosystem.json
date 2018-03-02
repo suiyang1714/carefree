@@ -20,7 +20,7 @@
       "repo": "git@github.com:suiyang1714/carefree.git",
       "path" : "/www/mina/production",
       "ssh_options" : "StrictHostKeyChecking=no",
-      "post-deploy" : "pm2 startOrRestart ecosystem.json --env production",
+      "post-deploy" : "",
       "env" :{
         "NODE_ENV" : "production"
       }
