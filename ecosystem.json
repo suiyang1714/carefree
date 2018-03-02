@@ -20,7 +20,7 @@
       "repo": "git@github.com:suiyang1714/carefree.git",
       "path" : "/www/mina/production",
       "ssh_options" : "StrictHostKeyChecking=no",
-      "post-deploy" : "npm install --registry=https://registry.npm.taobao.org && pm2 startOrRestart ecosystem.json --env production",
+      "post-deploy" : "yarn instill && pm2 startOrRestart ecosystem.json --env production",
       "env" :{
         "NODE_ENV" : "production"
       }
