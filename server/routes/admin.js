@@ -1,6 +1,7 @@
 import { controller, get, post, required, del } from '../decorator/router'
 import { resolve } from 'path'
 import mongoose from 'mongoose'
+import axios from 'axios'
 
 const Admin = mongoose.model('Admin')
 const Problem = mongoose.model('Problem')
@@ -55,7 +56,7 @@ export class adminController {
     }
   }
 
-  /* 问题回复 */
+  /* 邮件回复 */
   @post('addReply')
   @required({ body: ['_id', 'reply'] })
   async addReply (ctx, next) {
@@ -81,6 +82,14 @@ export class adminController {
 
     await problem.save()
     await reply.save()
+
+    const data = {
+      problem_id: replyMsg._id
+    }
+
+    const callbackMsg = await axios.post('http://127.0.0.1:3000/mina/postTemplate', data)
+
+    console.log(callbackMsg)
     ctx.body = {
       success: true
     }

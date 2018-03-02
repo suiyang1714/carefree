@@ -16,6 +16,7 @@ const ProblemSchema = new Schema({
     type: Boolean,
     default: false
   },
+  formId: String,
   reply: {
     type: String,
     ref: 'ProblemReply'

@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import crypto from 'crypto'
 import axios from 'axios'
 import http from 'http'
+import moment from 'moment'
 import {
   openidAndSessionKey,
   WXBizDataCrypt
@@ -16,6 +17,55 @@ const ProblemReply = mongoose.model('ProblemReply')
 
 @controller('/mina')
 export class minaController {
+  /* 模板消息 */
+  @post('postTemplate')
+  @required({ body: ['problem_id']})
+  async postTemplate (ctx, next) {
+    const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${config.mina.appid}&secret=${config.mina.secret}`
+    let access_tokenData = await axios.get(url)
+    const { access_token } = access_tokenData.data
+    const { problem_id } = ctx.request.body
+
+    const postUrl = `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=${access_token}`
+
+    const template_id = 'FfKZS88whH77umMv3JuTicUQQtDHys7g--hqWSyFvGI'
+    const problem = await Problem
+      .findOne({ _id: problem_id })
+      .populate('user')
+      .populate({
+        path: 'reply',
+        populate: {
+          path: 'adminUser'
+        }
+      })
+      .exec()
+
+    const template = {
+      keyword1: {
+        value: moment(problem.reply.meta.createdAt).format("YYYY DD MM hh mm ss")
+      },
+      keyword2: {
+        value: problem.reply.adminUser.nickname
+      }
+    }
+
+    const formData = {
+      touser: problem.user.openid,
+      template_id: template_id,
+      form_id: problem.formId,
+      data: template
+    }
+
+    const data = await axios.post(`${postUrl}`, formData)
+
+    console.log(data.data)
+
+    ctx.body = {
+      success: true,
+      data: data
+    }
+  }
+
   @get('wechat-notify')
   async wechatNotify (ctx, next) {
     console.log('请求了')
@@ -217,7 +267,7 @@ export class minaController {
   @get('poseProblem')
   @required({ query: ['problem', 'problemType', 'openid'] })
   async poseProblem (ctx, next) {
-    const { problem, problemType, openid } = ctx.query
+    const { problem, problemType, openid, formId } = ctx.query
 
     /* 通过 openid 读取 user 信息 */
     let user = await MinaUser
@@ -230,6 +280,7 @@ export class minaController {
       problem: problem,
       problemType: problemType,
       openid: openid,
+      formId: formId,
       user: user._id
     })
 
