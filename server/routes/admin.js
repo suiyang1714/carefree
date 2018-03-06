@@ -89,7 +89,7 @@ export class adminController {
 
     const callbackMsg = await axios.post('http://127.0.0.1:3000/mina/postTemplate', data)
 
-    console.log(callbackMsg)
+    console.log(callbackMsg.data)
     ctx.body = {
       success: true
     }

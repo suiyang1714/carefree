@@ -25,7 +25,6 @@ export class minaController {
     let access_tokenData = await axios.get(url)
     const { access_token } = access_tokenData.data
     const { problem_id } = ctx.request.body
-
     const postUrl = `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=${access_token}`
 
     const template_id = 'FfKZS88whH77umMv3JuTicUQQtDHys7g--hqWSyFvGI'
@@ -40,29 +39,37 @@ export class minaController {
       })
       .exec()
 
-    const template = {
-      keyword1: {
-        value: moment(problem.reply.meta.createdAt).format("YYYY DD MM hh mm ss")
-      },
-      keyword2: {
-        value: problem.reply.adminUser.nickname
-      }
-    }
-
-    const formData = {
+    let formData = {
       touser: problem.user.openid,
       template_id: template_id,
       form_id: problem.formId,
-      data: template
+      data: {
+        keyword1: {
+          value: moment(problem.reply.meta.createdAt).format("YYYY DD MM hh mm ss"),
+          color: '#173177'
+        },
+        keyword2: {
+          value: problem.reply.adminUser.nickname,
+          color: '#173177'
+        },
+        keyword3: {
+          value: '请打开知行小程序查看最新回复',
+          color: '#173177'
+        }
+      },
+      page: "pages/index/guide"
     }
+
+    formData = JSON.stringify(formData)
+
+    console.log(formData)
 
     const data = await axios.post(`${postUrl}`, formData)
 
     console.log(data.data)
 
     ctx.body = {
-      success: true,
-      data: data
+      success: true
     }
   }
 
@@ -163,7 +170,7 @@ export class minaController {
     const signType = "MD5"
     const attach = '打赏支付'
     const body = '感谢您的支持'
-    const notify_url = 'http://19170l14u5.imwork.net:35309/mina/wechat-notify'
+    const notify_url = 'http://127.0.0.1:3000/mina/wechat-notify'
     const paysignjsapi = paySignJsapi(appid, attach, body, mchid, nonceStr, notify_url, openid, timeStamp, ip, total_fee, 'JSAPI')
     let formData = `<xml>
       <appid>${appid}</appid>
