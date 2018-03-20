@@ -1,5 +1,5 @@
 export default {
-  db:'mongodb://admin_carefree:carefree1714@127.0.0.1:19999/userinfo',
+  db:'mongodb://admin-carefree:carefree1714@127.0.0.1:19999/carefree',
   SITE_ROOT_URL: 'http://19170l14u5.imwork.net:35309', //域名
   wechat: {
     appID: 'wxd06a6abfe49dba5b',
