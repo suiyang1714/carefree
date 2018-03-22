@@ -87,7 +87,7 @@ export class adminController {
       problem_id: replyMsg._id
     }
 
-    const callbackMsg = await axios.post('http://127.0.0.1:3000/mina/postTemplate', data)
+    const callbackMsg = await axios.post('http://127.0.0.1:5000/mina/postTemplate', data)
 
     console.log(callbackMsg.data)
     ctx.body = {
