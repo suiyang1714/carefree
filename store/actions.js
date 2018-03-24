@@ -64,6 +64,15 @@ export default {
 
     return res
   },
+  async fetchUnsolvedProblems ({ state }, page) {
+
+    console.log(page)
+    const  res = await Services.fetchUnsolvedProblems(page)
+
+    state.unsolvedproblems = res.data
+
+    return res
+  },
   async addReply ({ state }, reply) {
 
     reply.email = state.user.email

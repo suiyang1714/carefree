@@ -9,6 +9,9 @@ class Services {
   fetchProblems (page) {
     return axios.get(`${baseUrl}/admin/problemList?page=${page}`)
   }
+  fetchUnsolvedProblems (page) {
+    return axios.get(`${baseUrl}/admin/unsolvedProblems?page=${page}`)
+  }
   fetchProblemReply (page){
     return axios.get(`${baseUrl}/admin/replyList?page=${page}`)
   }

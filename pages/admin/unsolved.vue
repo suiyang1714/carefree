@@ -11,7 +11,7 @@
             th 回复
             th 操作
         tbody
-          tr(v-for='item in problems.data', v-if="!item.solve")
+          tr(v-for='item in unsolvedproblems.data')
             td
               .img
                 img(:src='item.user.avatarUrl')
@@ -25,7 +25,7 @@
     .pagination
       li
         a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in problems.count")
+      li(v-for="(n, index) in unsolvedproblems.count")
         a(v-on:click="pagination(index)") {{ index+1 }}
       li
         a(v-on:click="pagination('next')") »
@@ -94,11 +94,12 @@
             nickname: String
           }
         },
-        editing: false
+        editing: false,
+        activePage: 1
       }
     },
     async created () {
-      await this.$store.dispatch('fetchProblems', this.activePage)
+      await this.$store.dispatch('fetchUnsolvedProblems', this.activePage)
       if (Number(this.$route.query.page)) {
         this.activePage = Number(this.$route.query.page)
       }
@@ -107,7 +108,7 @@
       //待写
     },
     computed: mapState([
-      'problems',
+      'unsolvedproblems',
       'user'
     ]),
     methods: {
@@ -157,13 +158,13 @@
           if (this.activePage != 1 && num == 'prev'){
 
             this.$router.push({path: '/admin/unsolved?page=' + this.activePage - 1})
-            this.$store.dispatch('fetchProblems' ,this.activePage - 1)
+            this.$store.dispatch('fetchUnsolvedProblems' ,this.activePage - 1)
             console.log('prev')
           }
-          else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
+          else if (this.activePage < this.$store.state.unsolvedproblems.count.length && num == 'next') {
             console.log(this.activePage)
             this.$router.push({path: '/admin/unsolved?page=' + this.activePage + 1})
-            this.$store.dispatch('fetchProblems' ,this.activePage + 1)
+            this.$store.dispatch('fetchUnsolvedProblems' ,this.activePage + 1)
             console.log('next')
 
           }

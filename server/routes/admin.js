@@ -149,8 +149,31 @@ export class adminController {
       data: List
     }
   }
+  /* unsolved problems */
+  @get('unsolvedProblems')
+  async fetchUnsolvedProblems (ctx, next) {
+    let { page } = ctx.query
 
-  /* 问题集合 */
+    if (!page) {
+      page = 1
+    }
+    let count = await Problem
+      .find({})
+    let List = await Problem
+      .find({solve: false})
+      .populate('user')
+      .populate('reply')
+      .skip((page - 1) * 50)
+      .limit(50)
+      .exec()
+    ctx.body = {
+      success: true,
+      data: List,
+      count: Math.round(count.lengtht / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
+    }
+  }
+
+  /* all problems */
   @get('problemList')
   async fetchProblems (ctx, next) {
     let { page } = ctx.query
@@ -166,7 +189,7 @@ export class adminController {
       .populate('user')
       .populate('reply')
       .skip((page - 1) * 50)
-      .limit(10)
+      .limit(50)
       .exec()
     ctx.body = {
       success: true,
