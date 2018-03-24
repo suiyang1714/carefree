@@ -211,7 +211,7 @@ var r = function r(path) {
   return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_path__["resolve"])(__dirname, path);
 };
 var host = process.env.HOST || '127.0.0.1';
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 var MIDDLEWARES = ['database', 'common', 'router'];
 /*import './wechat-lib'*/
 

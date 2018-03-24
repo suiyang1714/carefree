@@ -13,7 +13,7 @@
             th 回信管理员
             th 操作
         tbody
-          tr(v-for='item in problemReply', v-if="item.problem.solve")
+          tr(v-for='item in problemReply.data', v-if="item.problem.solve")
             td
               .img
                 img(:src='item.problem.user.avatarUrl')
@@ -26,6 +26,13 @@
             td
               button.btn(@click='eidtDelete(item)', style="margin: 0 auto;")
                 .material-icon(style='font-size: 20px') 删除
+    .pagination
+      li
+        a(v-on:click="pagination('prev')") «
+      li(v-for="(n, index) in problemReply.length")
+        a(v-on:click="pagination(index)") {{ index+1 }}
+      li
+        a(v-on:click="pagination('next')") »
     v-snackbar(:open.sync='openSnackbar')
       span(slot='body') 删除成功
 </template>
@@ -66,6 +73,12 @@
         if(result.success){
           this.openSnackbar = true;
         }
+      },
+      async pagination (num) {
+        if (Number(num) || Number(num) == 0) {
+          this.$router.push({path: '/admin/solved?page=' + num})
+          await this.$store.dispatch('fetchProblemReply' , Number(num)+1)
+        }
       }
     },
     components: {
@@ -73,4 +86,35 @@
     }
   }
 </script>
+<style>
+  .pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+  }
+  .pagination>li {
+    display: inline;
+  }
+  .pagination>li:first-child>a, .pagination>li:first-child>span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  .pagination>li:last-child>a, .pagination>li:last-child>span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+  .pagination>li>a, .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+  }
+</style>
 <style lang='sass', src='~static/sass/admin.sass', scoped/>

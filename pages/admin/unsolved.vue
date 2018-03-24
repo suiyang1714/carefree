@@ -11,7 +11,7 @@
             th 回复
             th 操作
         tbody
-          tr(v-for='item in problems', v-if="!item.solve")
+          tr(v-for='item in problems.data', v-if="!item.solve")
             td
               .img
                 img(:src='item.user.avatarUrl')
@@ -22,7 +22,13 @@
             td
               button.btn(@click='eidtReply(item)', style="margin: 0 auto;")
                 .material-icon(style='font-size: 20px') 回信
-
+    .pagination
+      li
+        a(v-on:click="pagination('prev')") «
+      li(v-for="(n, index) in problems.length")
+        a(v-on:click="pagination(index)") {{ index+1 }}
+      li
+        a(v-on:click="pagination('next')") »
     .edit-product(:class='{active: editing}')
       .edit-header
         .material-icon edit
@@ -139,6 +145,14 @@
       },
       deleteImg (index) {
         this.edited.images.splice(index, 1)
+      },
+      pagination (num) {
+        console.log(num)
+        if (Number(num) || Number(num) == 0) {
+          console.log(num)
+          this.$router.push({path: '/admin/unsolved?page=' + num})
+          this.$store.dispatch('fetchProblems' , Number(num)+1)
+        }
       }
     },
     components: {
@@ -146,4 +160,35 @@
     }
   }
 </script>
+<style>
+  .pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+  }
+  .pagination>li {
+    display: inline;
+  }
+  .pagination>li:first-child>a, .pagination>li:first-child>span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  .pagination>li:last-child>a, .pagination>li:last-child>span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+  .pagination>li>a, .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+  }
+</style>
 <style lang='sass', src='~static/sass/admin.sass', scoped/>

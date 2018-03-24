@@ -38,6 +38,11 @@ export class adminController {
   /* 回复列表 */
   @get('replyList')
   async fetchReply ( ctx, next ) {
+    let { page } = ctx.query
+
+    if (!page) {
+      page = 1
+    }
 
     let list = await ProblemReply
       .find({})
@@ -48,11 +53,13 @@ export class adminController {
           path: 'user'
         }
       })
+      .skip((page - 1) * 50)
+      .limit(50)
       .exec()
-
     ctx.body = {
       success: true,
-      data: list
+      data: list,
+      length: Math.round(ProblemReply.length / 50) ? new Array(Math.round(ProblemReply.length / 50)) : new Array(Math.round(ProblemReply.length / 50) + 1)
     }
   }
 
@@ -87,7 +94,7 @@ export class adminController {
       problem_id: replyMsg._id
     }
 
-    const callbackMsg = await axios.post('http://127.0.0.1:5000/mina/postTemplate', data)
+    const callbackMsg = await axios.post('/mina/postTemplate', data)
 
     console.log(callbackMsg.data)
     ctx.body = {
@@ -144,18 +151,22 @@ export class adminController {
   /* 问题集合 */
   @get('problemList')
   async fetchProblems (ctx, next) {
-    let { limit = 50 } = ctx.query
+    let { page } = ctx.query
 
+    if (!page) {
+      page = 1
+    }
     let List = await Problem
       .find({})
       .populate('user')
       .populate('reply')
-      .limit(Number(limit))
+      .skip((page - 1) * 50)
+      .limit(50)
       .exec()
-
     ctx.body = {
       success: true,
-      data: List
+      data: List,
+      length: Math.round(Problem.length / 50) ? new Array(Math.round(Problem.length / 50)) : new Array(Math.round(Problem.length / 50) + 1)
     }
   }
 

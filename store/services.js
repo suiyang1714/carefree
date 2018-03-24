@@ -6,11 +6,11 @@ class Services {
   fetchUsers (url) {
     return axios.get(`${baseUrl}/admin/userList`)
   }
-  fetchProblems (url) {
-    return axios.get(`${baseUrl}/admin/problemList`)
+  fetchProblems (page) {
+    return axios.get(`${baseUrl}/admin/problemList?page=${page}`)
   }
-  fetchProblemReply (){
-    return axios.get(`${baseUrl}/admin/replyList`)
+  fetchProblemReply (page){
+    return axios.get(`${baseUrl}/admin/replyList?page=${page}`)
   }
   deleteReply (_id) {
     return axios.get(`${baseUrl}/admin/deleteReply?_id=${_id}`)

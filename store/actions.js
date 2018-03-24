@@ -55,12 +55,13 @@ export default {
 
     return res
   },
-  async fetchProblems ({ state }) {
+  async fetchProblems ({ state }, page) {
 
-    const  res = await Services.fetchProblems()
+    console.log(page)
+    const  res = await Services.fetchProblems(page)
 
-    console.log(res.data.data)
-    state.problems = res.data.data
+    state.problems = res.data
+    console.log(state.problems )
 
     return res
   },
@@ -71,11 +72,11 @@ export default {
 
     return { success: true }
   },
-  async fetchProblemReply ({ state }) {
+  async fetchProblemReply ({ state }, page) {
 
-    const  res = await Services.fetchProblemReply()
+    const  res = await Services.fetchProblemReply(page)
 
-    state.problemReply = res.data.data
+    state.problemReply = res.data
 
     return res
   },

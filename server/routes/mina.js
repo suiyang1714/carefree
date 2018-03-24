@@ -53,7 +53,7 @@ export class minaController {
           color: '#173177'
         },
         keyword3: {
-          value: '请打开知行小程序查看最新回复',
+          value: '请打开一封信件小程序查看最新回复',
           color: '#173177'
         }
       },
@@ -170,7 +170,7 @@ export class minaController {
     const signType = "MD5"
     const attach = '打赏支付'
     const body = '感谢您的支持'
-    const notify_url = 'http://127.0.0.1:3000/mina/wechat-notify'
+    const notify_url = 'https://admin.suiyangdadi.com/mina/wechat-notify'
     const paysignjsapi = paySignJsapi(appid, attach, body, mchid, nonceStr, notify_url, openid, timeStamp, ip, total_fee, 'JSAPI')
     let formData = `<xml>
       <appid>${appid}</appid>
@@ -263,11 +263,11 @@ export class minaController {
             data: item
           }
         }
-
-        return ctx.body = {
-          success: false
-        }
       })
+    } else {
+      return ctx.body = {
+        success: false
+      }
     }
   }
 
