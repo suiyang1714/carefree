@@ -61,7 +61,6 @@ export default {
     const  res = await Services.fetchProblems(page)
 
     state.problems = res.data
-    console.log(state.problems )
 
     return res
   },
@@ -76,6 +75,7 @@ export default {
 
     const  res = await Services.fetchProblemReply(page)
 
+    console.log(res.data)
     state.problemReply = res.data
 
     return res

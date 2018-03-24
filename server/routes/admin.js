@@ -43,6 +43,8 @@ export class adminController {
     if (!page) {
       page = 1
     }
+    let count = await ProblemReply
+      .find({})
 
     let list = await ProblemReply
       .find({})
@@ -53,13 +55,13 @@ export class adminController {
           path: 'user'
         }
       })
-      .skip((page - 1) * 50)
-      .limit(50)
+      .skip((page - 1) * 10)
+      .limit(10)
       .exec()
     ctx.body = {
       success: true,
       data: list,
-      length: Math.round(ProblemReply.length / 50) ? new Array(Math.round(ProblemReply.length / 50)) : new Array(Math.round(ProblemReply.length / 50) + 1)
+      count: Math.round(count.length / 10) ? new Array(Math.round(count.length / 10)) : new Array(Math.round(count.length / 10) + 1)
     }
   }
 
@@ -94,7 +96,7 @@ export class adminController {
       problem_id: replyMsg._id
     }
 
-    const callbackMsg = await axios.post('/mina/postTemplate', data)
+    const callbackMsg = await axios.post('http://localhost:5000/mina/postTemplate', data)
 
     console.log(callbackMsg.data)
     ctx.body = {
@@ -156,17 +158,20 @@ export class adminController {
     if (!page) {
       page = 1
     }
+    let count = await Problem
+      .find({})
+    console.log(count.length)
     let List = await Problem
       .find({})
       .populate('user')
       .populate('reply')
-      .skip((page - 1) * 50)
-      .limit(50)
+      .skip((page - 1) * 10)
+      .limit(10)
       .exec()
     ctx.body = {
       success: true,
       data: List,
-      length: Math.round(Problem.length / 50) ? new Array(Math.round(Problem.length / 50)) : new Array(Math.round(Problem.length / 50) + 1)
+      count: Math.round(count.lengtht / 10) ? new Array(Math.round(count.length / 10)) : new Array(Math.round(count.length / 10) + 1)
     }
   }
 

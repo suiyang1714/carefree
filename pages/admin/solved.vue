@@ -29,7 +29,7 @@
     .pagination
       li
         a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in problemReply.length")
+      li(v-for="(n, index) in problemReply.count")
         a(v-on:click="pagination(index)") {{ index+1 }}
       li
         a(v-on:click="pagination('next')") »
@@ -54,11 +54,15 @@
         openSnackbar: false,
         edited: {
 
-        }
+        },
+        activePage: 1
       }
     },
     async created () {
-      this.$store.dispatch('fetchProblemReply')
+      await this.$store.dispatch('fetchProblemReply', this.activePage)
+      if (Number(this.$route.query.page)) {
+        this.activePage = Number(this.$route.query.page)
+      }
     },
     mounted () {
       //待写
@@ -77,7 +81,21 @@
       async pagination (num) {
         if (Number(num) || Number(num) == 0) {
           this.$router.push({path: '/admin/solved?page=' + num})
-          await this.$store.dispatch('fetchProblemReply' , Number(num)+1)
+          this.$store.dispatch('fetchProblemReply' , Number(num)+1)
+        } else {
+          if (this.activePage != 1 && num == 'prev'){
+
+            this.$router.push({path: '/admin/solved?page=' + this.activePage - 1})
+            this.$store.dispatch('fetchProblemReply' ,this.activePage - 1)
+            console.log('prev')
+          }
+          else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
+            console.log(this.activePage)
+            this.$router.push({path: '/admin/solved?page=' + this.activePage + 1})
+            this.$store.dispatch('fetchProblemReply' ,this.activePage + 1)
+            console.log('next')
+
+          }
         }
       }
     },

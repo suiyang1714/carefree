@@ -23,7 +23,7 @@
     .pagination
       li
         a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in problems.length")
+      li(v-for="(n, index) in problems.count")
         a(v-on:click="pagination(index)") {{ index+1 }}
       li
         a(v-on:click="pagination('next')") »
@@ -47,22 +47,39 @@
         isProduct: false,
         openSnackbar: false,
         editing: false,
-        activePage: Number
+        activePage: 1
       }
     },
     async created () {
-      this.$store.dispatch('fetchProblems')
-      this.activePage = Number(this.$route.query.page)
+      await this.$store.dispatch('fetchProblems', this.activePage)
+      if (Number(this.$route.query.page)) {
+        this.activePage = Number(this.$route.query.page)
+      }
       console.log(this.activePage)
+      console.log(this.$store.state.problems.count.length)
     },
     computed: mapState([
       'problems'
     ]),
     methods: {
-      pagination (num) {
+      async pagination (num) {
         if (Number(num) || Number(num) == 0) {
-          this.$router.push({path: '/admin/problem?page=' + num})
+          this.$router.push({path: '/admin/unsolved?page=' + num})
           this.$store.dispatch('fetchProblems' , Number(num)+1)
+        } else {
+          if (this.activePage != 1 && num == 'prev'){
+
+            this.$router.push({path: '/admin/unsolved?page=' + this.activePage - 1})
+            this.$store.dispatch('fetchProblems' ,this.activePage - 1)
+            console.log('prev')
+          }
+          else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
+            console.log(this.activePage)
+            this.$router.push({path: '/admin/unsolved?page=' + this.activePage + 1})
+            this.$store.dispatch('fetchProblems' ,this.activePage + 1)
+            console.log('next')
+
+          }
         }
       }
     },

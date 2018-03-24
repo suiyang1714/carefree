@@ -4,11 +4,11 @@
             li
                 nuxt-link(to='/admin') 管理员列表
             li
-              nuxt-link(to='/admin/problem') 收取邮件
+              nuxt-link(to='/admin/problem?page=0') 收取邮件
             li
-              nuxt-link(to='/admin/unsolved') 未解决邮件
+              nuxt-link(to='/admin/unsolved?page=0') 未解决邮件
             li
-              nuxt-link(to='/admin/solved') 已解决邮件
+              nuxt-link(to='/admin/solved?page=0') 已解决邮件
 
 </template>
 <style lang='sass'>

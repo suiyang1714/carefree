@@ -25,7 +25,7 @@
     .pagination
       li
         a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in problems.length")
+      li(v-for="(n, index) in problems.count")
         a(v-on:click="pagination(index)") {{ index+1 }}
       li
         a(v-on:click="pagination('next')") »
@@ -98,7 +98,10 @@
       }
     },
     async created () {
-      this.$store.dispatch('fetchProblems')
+      await this.$store.dispatch('fetchProblems', this.activePage)
+      if (Number(this.$route.query.page)) {
+        this.activePage = Number(this.$route.query.page)
+      }
     },
     mounted () {
       //待写
@@ -146,12 +149,24 @@
       deleteImg (index) {
         this.edited.images.splice(index, 1)
       },
-      pagination (num) {
-        console.log(num)
+      async pagination (num) {
         if (Number(num) || Number(num) == 0) {
-          console.log(num)
-          this.$router.push({path: '/admin/unsolved?page=' + num})
+          this.$router.push({path: '/admin/problem?page=' + num})
           this.$store.dispatch('fetchProblems' , Number(num)+1)
+        } else {
+          if (this.activePage != 1 && num == 'prev'){
+
+            this.$router.push({path: '/admin/problem?page=' + this.activePage - 1})
+            this.$store.dispatch('fetchProblems' ,this.activePage - 1)
+            console.log('prev')
+          }
+          else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
+            console.log(this.activePage)
+            this.$router.push({path: '/admin/problem?page=' + this.activePage + 1})
+            this.$store.dispatch('fetchProblems' ,this.activePage + 1)
+            console.log('next')
+
+          }
         }
       }
     },
