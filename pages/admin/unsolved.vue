@@ -26,7 +26,7 @@
       li
         a(v-on:click="pagination('prev')") «
       li(v-for="(n, index) in unsolvedproblems.count")
-        a(v-on:click="pagination(index)") {{ index+1 }}
+        a(v-on:click="pagination(index+1)") {{ index+1 }}
       li
         a(v-on:click="pagination('next')") »
     .edit-product(:class='{active: editing}')
@@ -99,10 +99,8 @@
       }
     },
     async created () {
+      this.activePage = Number(this.$route.query.page)
       await this.$store.dispatch('fetchUnsolvedProblems', this.activePage)
-      if (Number(this.$route.query.page)) {
-        this.activePage = Number(this.$route.query.page)
-      }
     },
     mounted () {
       //待写
@@ -151,22 +149,22 @@
         this.edited.images.splice(index, 1)
       },
       async pagination (num) {
-        if (Number(num) || Number(num) == 0) {
-          this.$router.push({path: '/admin/unsolved?page=' + num})
-          this.$store.dispatch('fetchProblems' , Number(num)+1)
+        if (Number(num)) {
+          num = Number(num)
+          this.activePage = num
+          this.$router.push({path: '/admin/unsolved?page=' +  num})
+          this.$store.dispatch('fetchUnsolvedProblems' , num)
         } else {
           if (this.activePage != 1 && num == 'prev'){
 
-            this.$router.push({path: '/admin/unsolved?page=' + this.activePage - 1})
-            this.$store.dispatch('fetchUnsolvedProblems' ,this.activePage - 1)
-            console.log('prev')
+            this.activePage = this.activePage - 1
+            this.$router.push({path: '/admin/unsolved?page=' + this.activePage })
+            this.$store.dispatch('fetchUnsolvedProblems', this.activePage )
           }
-          else if (this.activePage < this.$store.state.unsolvedproblems.count.length && num == 'next') {
-            console.log(this.activePage)
-            this.$router.push({path: '/admin/unsolved?page=' + this.activePage + 1})
-            this.$store.dispatch('fetchUnsolvedProblems' ,this.activePage + 1)
-            console.log('next')
-
+          else if ( (this.activePage < this.$store.state.unsolvedproblems.count.length) && num == 'next') {
+            this.activePage = this.activePage + 1
+            this.$router.push({path: '/admin/unsolved?page=' + this.activePage})
+            this.$store.dispatch('fetchUnsolvedProblems', this.activePage)
           }
         }
       }

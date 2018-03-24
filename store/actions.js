@@ -57,7 +57,6 @@ export default {
   },
   async fetchProblems ({ state }, page) {
 
-    console.log(page)
     const  res = await Services.fetchProblems(page)
 
     state.problems = res.data
@@ -66,7 +65,6 @@ export default {
   },
   async fetchUnsolvedProblems ({ state }, page) {
 
-    console.log(page)
     const  res = await Services.fetchUnsolvedProblems(page)
 
     state.unsolvedproblems = res.data
@@ -84,7 +82,6 @@ export default {
 
     const  res = await Services.fetchProblemReply(page)
 
-    console.log(res.data)
     state.problemReply = res.data
 
     return res

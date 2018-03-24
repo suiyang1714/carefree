@@ -51,32 +51,29 @@
       }
     },
     async created () {
+      this.activePage = Number(this.$route.query.page)
       await this.$store.dispatch('fetchProblems', this.activePage)
-      if (Number(this.$route.query.page)) {
-        this.activePage = Number(this.$route.query.page)
-      }
-      console.log(this.activePage)
-      console.log(this.$store.state.problems.count.length)
     },
     computed: mapState([
       'problems'
     ]),
     methods: {
       async pagination (num) {
-        if (Number(num) || Number(num) == 0) {
+        if (Number(num)) {
+          num = Number(num)
           this.$router.push({path: '/admin/problem?page=' + num})
-          this.$store.dispatch('fetchProblems' , Number(num)+1)
+          this.$store.dispatch('fetchProblems', num)
         } else {
           if (this.activePage != 1 && num == 'prev'){
-
-            this.$router.push({path: '/admin/problem?page=' + this.activePage - 1})
-            this.$store.dispatch('fetchProblems' ,this.activePage - 1)
+            this.activePage = this.activePage - 1
+            this.$router.push({path: '/admin/problem?page=' + this.activePage})
+            this.$store.dispatch('fetchProblems', this.activePage)
             console.log('prev')
           }
           else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
-            console.log(this.activePage)
-            this.$router.push({path: '/admin/problem?page=' + this.activePage + 1})
-            this.$store.dispatch('fetchProblems' ,this.activePage + 1)
+            this.activePage = this.activePage + 1
+            this.$router.push({path: '/admin/problem?page=' + this.activePage})
+            this.$store.dispatch('fetchProblems', this.activePage)
             console.log('next')
 
           }

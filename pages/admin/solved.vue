@@ -59,10 +59,8 @@
       }
     },
     async created () {
+      this.activePage = Number(this.$route.query.page)
       await this.$store.dispatch('fetchProblemReply', this.activePage)
-      if (Number(this.$route.query.page)) {
-        this.activePage = Number(this.$route.query.page)
-      }
     },
     mounted () {
       //待写
@@ -79,20 +77,22 @@
         }
       },
       async pagination (num) {
-        if (Number(num) || Number(num) == 0) {
+        if (Number(num)) {
+          num = Number(num)
           this.$router.push({path: '/admin/solved?page=' + num})
-          this.$store.dispatch('fetchProblemReply' , Number(num)+1)
+          this.$store.dispatch('fetchProblemReply', num)
         } else {
           if (this.activePage != 1 && num == 'prev'){
 
-            this.$router.push({path: '/admin/solved?page=' + this.activePage - 1})
-            this.$store.dispatch('fetchProblemReply' ,this.activePage - 1)
+            this.activePage = this.activePage - 1
+            this.$router.push({path: '/admin/solved?page=' + this.activePage})
+            this.$store.dispatch('fetchProblemReply', this.activePage)
             console.log('prev')
           }
           else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
-            console.log(this.activePage)
-            this.$router.push({path: '/admin/solved?page=' + this.activePage + 1})
-            this.$store.dispatch('fetchProblemReply' ,this.activePage + 1)
+            this.activePage = this.activePage + 1
+            this.$router.push({path: '/admin/solved?page=' + this.activePage})
+            this.$store.dispatch('fetchProblemReply', this.activePage)
             console.log('next')
 
           }
