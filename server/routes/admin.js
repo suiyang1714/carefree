@@ -169,7 +169,7 @@ export class adminController {
     ctx.body = {
       success: true,
       data: List,
-      count: Math.round(count.lengtht / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
+      count: Math.round(count.length / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
     }
   }
 
