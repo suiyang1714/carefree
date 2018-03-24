@@ -64,18 +64,18 @@
     methods: {
       async pagination (num) {
         if (Number(num) || Number(num) == 0) {
-          this.$router.push({path: '/admin/unsolved?page=' + num})
+          this.$router.push({path: '/admin/problem?page=' + num})
           this.$store.dispatch('fetchProblems' , Number(num)+1)
         } else {
           if (this.activePage != 1 && num == 'prev'){
 
-            this.$router.push({path: '/admin/unsolved?page=' + this.activePage - 1})
+            this.$router.push({path: '/admin/problem?page=' + this.activePage - 1})
             this.$store.dispatch('fetchProblems' ,this.activePage - 1)
             console.log('prev')
           }
           else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
             console.log(this.activePage)
-            this.$router.push({path: '/admin/unsolved?page=' + this.activePage + 1})
+            this.$router.push({path: '/admin/problem?page=' + this.activePage + 1})
             this.$store.dispatch('fetchProblems' ,this.activePage + 1)
             console.log('next')
 

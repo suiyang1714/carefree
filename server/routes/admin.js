@@ -55,13 +55,13 @@ export class adminController {
           path: 'user'
         }
       })
-      .skip((page - 1) * 10)
-      .limit(10)
+      .skip((page - 1) * 50)
+      .limit(50)
       .exec()
     ctx.body = {
       success: true,
       data: list,
-      count: Math.round(count.length / 10) ? new Array(Math.round(count.length / 10)) : new Array(Math.round(count.length / 10) + 1)
+      count: Math.round(count.length / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
     }
   }
 
@@ -165,13 +165,13 @@ export class adminController {
       .find({})
       .populate('user')
       .populate('reply')
-      .skip((page - 1) * 10)
+      .skip((page - 1) * 50)
       .limit(10)
       .exec()
     ctx.body = {
       success: true,
       data: List,
-      count: Math.round(count.lengtht / 10) ? new Array(Math.round(count.length / 10)) : new Array(Math.round(count.length / 10) + 1)
+      count: Math.round(count.lengtht / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
     }
   }
 
