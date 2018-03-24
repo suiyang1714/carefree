@@ -79,6 +79,7 @@
       async pagination (num) {
         if (Number(num)) {
           num = Number(num)
+          this.activePage = num
           this.$router.push({path: '/admin/solved?page=' + num})
           this.$store.dispatch('fetchProblemReply', num)
         } else {

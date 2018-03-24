@@ -165,13 +165,13 @@ export class adminController {
       .find({solve: false})
       .populate('user')
       .populate('reply')
-      .skip((page - 1) * 1)
-      .limit(1)
+      .skip((page - 1) * 50)
+      .limit(50)
       .exec()
     ctx.body = {
       success: true,
       data: List,
-      count: Math.round(count.length / 1) ? new Array(Math.round(count.length / 1)) : new Array(Math.round(count.length / 1) + 1)
+      count: Math.round(count.length / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
     }
   }
 
