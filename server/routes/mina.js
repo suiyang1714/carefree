@@ -57,7 +57,7 @@ export class minaController {
           color: '#173177'
         }
       },
-      page: "pages/index/guide"
+      page: "pages/reply/index"
     }
 
     formData = JSON.stringify(formData)
