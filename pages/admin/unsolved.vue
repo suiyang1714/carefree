@@ -1,77 +1,47 @@
 <template lang="pug">
   .content
-    .related-products
-      table.table
-        thead
-          tr
-            th 头像
-            th 用户昵称
-            th 邮件类型
-            th 邮件信息
-            th 操作
-        tbody
-          tr(v-for='item in unsolvedproblems.data')
-            td
-              .img
-                img(:src='item.user.avatarUrl')
-            td {{item.user.nickname}}
-            td {{item.user.problemType}}
-            td {{item.problem}}
-            td
-              button.btn(@click='eidtReply(item)', style="margin: 0 auto;")
-                .material-icon(style='font-size: 20px') 回信
-    .pagination
-      li
-        a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in unsolvedproblems.count")
-        a(v-on:click="pagination(index+1)") {{ index+1 }}
-      li
-        a(v-on:click="pagination('next')") »
+    el-table(:data='unsolvedproblems.data', style='width: 100%', max-height='600')
+      el-table-column( label='头像', width='180')
+        template(slot-scope='scope')
+          .img
+            img(:src='scope.row.user.avatarUrl')
+      el-table-column(prop='user.nickname', label='昵称', width='180')
+      el-table-column(prop='problemType', label='问题类型', width='180')
+      el-table-column(prop='problem', label='问题内容', width='180')
+      el-table-column(label='创建日期', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.meta.createdAt | difference }}
+      el-table-column(label='距今时间', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.meta.createdAt | momentDate }}
+      el-table-column(fixed='right', label='操作', width='60')
+        template(slot-scope='scope')
+          el-button(@click.native.prevent='createUser(scope.$index, unsolvedproblems.data)', type='text', size='small')
+            | 回信
+    //    分页
+    el-pagination(background='', layout='prev, pager, next', :total='unsolvedproblems.count.length', @current-change="handleCurrentChange")
     .edit-product(:class='{active: editing}')
-      .edit-header
-        .material-icon edit
-        div(style='flex: 1')
-        .material-icon(@click='editing = !editing') close
-      .edit-body
-        .form.edit-form(v-if='!isProduct')
-          .input-group
-            label id
-            input(v-model='edited._id')
-          .input-group
-            label 管理员邮箱
-            input(v-model='user.email')
-          .input-group
-            label 用户昵称
-            input(v-model='edited.nickname')
-          .input-group
-            label 回信内容
-            textarea(v-model='edited.reply', @keyup='editedIntro')
-        .form.edit-form(v-if='isProduct')
-          .input-group
-            label id
-            input(v-model='edited._id')
-          .input-group
-            label 管理员邮箱
-            input(v-model='user.email')
-          .input-group
-            label 用户昵称
-            input(v-model='edited.user.nickname')
-          .input-group
-            label 回信内容
-            textarea(v-model='edited.reply', @keyup='editedIntro')
-      .edit-footer
-        button.btn.save(@click='saveEdited', v-if='!isProduct') 创建新回信
-        button.btn.save(@click='saveEdited', v-if='isProduct') 创建新回信
-    .float-btn(@click='createUser')
-      .material-icon add
-    v-snackbar(:open.sync='openSnackbar')
-      span(slot='body') 保存成功
+      el-form(ref='form', :model='form', label-width='80px')
+        h1  创建新回信
+        el-form-item(label='id')
+          el-input(v-model='form._id')
+        el-form-item(label='管理员邮箱')
+          el-input(v-model='user.email')
+        el-form-item(label='用户昵称')
+          el-input(v-model='form.user.nickname')
+        el-form-item(label='回复内容')
+          el-input(type='textarea', v-model='form.reply', @keyup='editedIntro')
+        el-form-item
+          el-button(type='primary', @click='saveEdited', v-if='!isProduct') 创建新回信
+          el-button(@click='editing = !editing') 取消
+    <!--.float-btn(@click='createUser')-->
+      <!--el-button(type='primary', icon='el-icon-edit', circle='')-->
+
 </template>
 
 <script>
   import { mapState } from 'vuex'
-  import axios from 'axios'
-  import vSnackbar from '~components/snackbar'
+  import moment from 'moment'
 
   export default {
     middleware: 'auth',
@@ -85,20 +55,31 @@
       return {
         isProduct: false,
         openSnackbar: false,
-        edited: {
-          email: this.$store.state.user.email,
+        form: {
+          _id: '',
           user: {
-            openid: String,
-            nickname: String
+            nickname: ''
           }
         },
         editing: false,
-        activePage: 1
+        activePage: 1,
+        rowObject: Object,
+        rowIndex: Number
       }
     },
     async created () {
       this.activePage = Number(this.$route.query.page)
       await this.$store.dispatch('fetchUnsolvedProblems', this.activePage)
+    },
+    // 日期过滤
+    filters: {
+      momentDate (time) {
+        return moment(time).format("YYYY-DD-MM hh:mm:ss")
+      },
+      difference (time) {
+        return moment(time).fromNow()
+        // return moment(moment(time).format("YYYY-DD-MM hh:mm:ss"),"YYYY-DD-MM hh:mm:ss").fromNow()
+      }
     },
     mounted () {
       //待写
@@ -114,93 +95,67 @@
         this.edited.intro = html
       },
       eidtReply (item) {
-        this.edited = item
+        this.form = item
         this.isProduct = true
         this.editing = true
       },
-      createUser () {
-        this.edited = { }
+      createUser (index, rows) {
+        this.form = rows[index]
         this.isProduct = false
         this.editing = true
+        this.rowObject = rows
+        this.rowIndex = index
       },
       async saveEdited () {
-        this.isProduct
-          ? await this.$store.dispatch('addReply', this.edited)
-          : await this.$store.dispatch('addReply', this.edited)
-
-        this.openSnackbar = true
         this.isProduct = false
-        this.edited = {
-          images: [],
-          parameters: []
-        }
-
         this.editing = !this.editing
-      },
-      removeParameter (index) {
-        this.edited.parameters.splice(index, 1)
-      },
-      addParameter () {
-        this.edited.parameters.push({ key: '', value: '' })
-      },
-      deleteImg (index) {
-        this.edited.images.splice(index, 1)
-      },
-      async pagination (num) {
-        if (Number(num)) {
-          num = Number(num)
-          this.activePage = num
-          this.$router.push({path: '/admin/unsolved?page=' +  num})
-          this.$store.dispatch('fetchUnsolvedProblems' , num)
-        } else {
-          if (this.activePage != 1 && num == 'prev'){
+        const resolve = await this.$store.dispatch('addReply', this.form)
+        if (resolve.success) {
 
-            this.activePage = this.activePage - 1
-            this.$router.push({path: '/admin/unsolved?page=' + this.activePage })
-            this.$store.dispatch('fetchUnsolvedProblems', this.activePage )
-          }
-          else if ( (this.activePage < this.$store.state.unsolvedproblems.count.length) && num == 'next') {
-            this.activePage = this.activePage + 1
-            this.$router.push({path: '/admin/unsolved?page=' + this.activePage})
-            this.$store.dispatch('fetchUnsolvedProblems', this.activePage)
-          }
+          this.rowObject.splice(this.rowIndex, 1)
+          // 弹框
+          const h = this.$createElement;
+          this.$notify({
+            title: '回复成功',
+            message: h('i', { style: 'color: teal'}, `您以${this.$store.state.user.nickname}名义回复成功`),
+            duration: 3000
+          });
+        } else {
+          // 弹框
+          const h = this.$createElement;
+          this.$notify({
+            title: '回复失败',
+            message: h('i', { style: 'color: teal'}, '请向开发者反馈该问题'),
+            duration: 3000
+          });
+
         }
+      },
+      //  分页
+      async handleCurrentChange(val) {
+        await this.$store.dispatch('fetchProblems', val)
+        this.$router.push({path: '/admin/problem?page=' + val})
       }
-    },
-    components: {
-      vSnackbar
     }
   }
 </script>
-<style>
-  .pagination {
-    display: inline-block;
-    padding-left: 0;
-    margin: 20px 0;
-    border-radius: 4px;
+<style lang='sass', src='~static/sass/admin.sass', scoped/>
+<style scoped>
+  .demo-table-expand {
+    font-size: 0;
   }
-  .pagination>li {
-    display: inline;
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
   }
-  .pagination>li:first-child>a, .pagination>li:first-child>span {
-    margin-left: 0;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
-  .pagination>li:last-child>a, .pagination>li:last-child>span {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-  .pagination>li>a, .pagination>li>span {
-    position: relative;
-    float: left;
-    padding: 6px 12px;
-    margin-left: -1px;
-    line-height: 1.42857143;
-    color: #337ab7;
-    text-decoration: none;
-    background-color: #fff;
-    border: 1px solid #ddd;
+  .edit-product {
+    width: auto;
+    height: auto;
+    padding: 5%;
   }
 </style>
-<style lang='sass', src='~static/sass/admin.sass', scoped/>

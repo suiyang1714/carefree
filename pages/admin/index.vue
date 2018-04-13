@@ -32,7 +32,7 @@
           el-button(type='primary', @click='saveEdited', v-if='isProduct') 保存修改
           el-button(@click='editing = !editing') 取消
     .float-btn(@click='createUser')
-      .material-icon add
+      el-button(type='primary', icon='el-icon-edit', circle='')
 </template>
 
 <script>

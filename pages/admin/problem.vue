@@ -1,38 +1,29 @@
 <template lang="pug">
   .content
-    .related-products
-      table.table
-        thead
-          tr
-            th 头像
-            th 用户昵称
-            th 问题类型
-            th 问题内容
-            th 是否回信
-            th 满意度
-        tbody
-          tr(v-for='item in problems.data')
-            td
-              .img
-                img(:src='item.user.avatarUrl')
-            td {{item.user.nickname}}
-            td {{item.problemType}}
-            td {{item.problem}}
-            td( v-text='item.solve ? "已回信": "未回信"')
-            td( v-text='item.solve ? item.reply.isUserAccess ? item.satisfaction ? "满意": "不满意" : "待评价" : "待评价"')
-    .pagination
-      li
-        a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in problems.count")
-        a(v-on:click="pagination(index)") {{ index+1 }}
-      li
-        a(v-on:click="pagination('next')") »
+    el-table(:data='problems.data', style='width: 100%', max-height='600')
+      el-table-column( label='头像', width='180')
+        template(slot-scope='scope')
+          .img
+            img(:src='scope.row.user.avatarUrl')
+      el-table-column(prop='user.nickname', label='昵称', width='180')
+      el-table-column(prop='problemType', label='问题类型', width='180')
+      el-table-column(prop='problem', label='问题内容', width='180')
+      el-table-column(label='是否回信', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.solve ? "已回信": "未回信" }}
+      el-table-column(label='是否回信', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.solve ? scope.row.reply.isUserAccess ? scope.row.satisfaction ? "满意": "不满意" : "待评价" : "待评价" }}
+      el-table-column(label='创建日期', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.meta.createdAt | momentDate }}
+    //    分页
+    el-pagination(background='', layout='prev, pager, next', :total='problems.count.length', @current-change="handleCurrentChange")
 </template>
 
 <script>
   import { mapState } from 'vuex'
-  import axios from 'axios'
-  import vSnackbar from '~components/snackbar'
+  import moment from 'moment'
 
   export default {
     middleware: 'auth',
@@ -47,7 +38,13 @@
         isProduct: false,
         openSnackbar: false,
         editing: false,
-        activePage: 1
+        activePage: 1,
+        currentPage4: 4
+      }
+    },
+    filters: {
+      momentDate (time) {
+        return moment(time).format("YYYY-DD-MM hh:mm:ss")
       }
     },
     async created () {
@@ -58,63 +55,26 @@
       'problems'
     ]),
     methods: {
-      async pagination (num) {
-        if (Number(num)) {
-          num = Number(num)
-          this.activePage = num
-          this.$router.push({path: '/admin/problem?page=' + num})
-          this.$store.dispatch('fetchProblems', num)
-        } else {
-          if (this.activePage != 1 && num == 'prev'){
-            this.activePage = this.activePage - 1
-            this.$router.push({path: '/admin/problem?page=' + this.activePage})
-            this.$store.dispatch('fetchProblems', this.activePage)
-            console.log('prev')
-          }
-          else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
-            this.activePage = this.activePage + 1
-            this.$router.push({path: '/admin/problem?page=' + this.activePage})
-            this.$store.dispatch('fetchProblems', this.activePage)
-            console.log('next')
-
-          }
-        }
+    //  分页
+      async handleCurrentChange(val) {
+        await this.$store.dispatch('fetchProblems', val)
+        this.$router.push({path: '/admin/problem?page=' + val})
       }
-    },
-    components: {
-      vSnackbar
     }
   }
 </script>
-<style>
-  .pagination {
-    display: inline-block;
-    padding-left: 0;
-    margin: 20px 0;
-    border-radius: 4px;
+<style scoped>
+  .demo-table-expand {
+    font-size: 0;
   }
-  .pagination>li {
-    display: inline;
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
   }
-  .pagination>li:first-child>a, .pagination>li:first-child>span {
-    margin-left: 0;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-  .pagination>li:last-child>a, .pagination>li:last-child>span {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-  .pagination>li>a, .pagination>li>span {
-    position: relative;
-    float: left;
-    padding: 6px 12px;
-    margin-left: -1px;
-    line-height: 1.42857143;
-    color: #337ab7;
-    text-decoration: none;
-    background-color: #fff;
-    border: 1px solid #ddd;
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>
 <style lang='sass', src='~static/sass/admin.sass', scoped/>

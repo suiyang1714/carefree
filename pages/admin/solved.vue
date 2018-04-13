@@ -1,45 +1,27 @@
 <template lang="pug">
   .content
-    .related-products
-      table.table
-        thead
-          tr
-            th 头像
-            th openId
-            th 用户昵称
-            th 邮件类型
-            th 邮件信息
-            th 邮件回信
-            th 回信管理员
-            th 操作
-        tbody
-          tr(v-for='item in problemReply.data', v-if="item.problem.solve")
-            td
-              .img
-                img(:src='item.problem.user.avatarUrl')
-            td {{item.problem.user.openid}}
-            td {{item.problem.user.nickname}}
-            td {{item.problem.problem}}
-            td {{item.problem.problemType}}
-            td {{item.reply}}
-            td {{item.adminUser.nickname}}{{item.adminUser.email}}
-            td
-              button.btn(@click='eidtDelete(item)', style="margin: 0 auto;")
-                .material-icon(style='font-size: 20px') 删除
-    .pagination
-      li
-        a(v-on:click="pagination('prev')") «
-      li(v-for="(n, index) in problemReply.count")
-        a(v-on:click="pagination(index)") {{ index+1 }}
-      li
-        a(v-on:click="pagination('next')") »
-    v-snackbar(:open.sync='openSnackbar')
-      span(slot='body') 删除成功
+    el-table(:data='problemReply.data', style='width: 100%', max-height='600')
+      el-table-column( label='头像', width='180')
+        template(slot-scope='scope')
+          .img
+            img(:src='scope.row.problem.user.avatarUrl')
+      el-table-column(prop='problem.user.nickname', label='昵称', width='180')
+      el-table-column(prop='problem.problemType', label='来信类型', width='180')
+      el-table-column(prop='problem.problem', label='来信内容', width='180')
+      el-table-column(label='创建日期', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.meta.createdAt | momentDate }}
+      el-table-column(label='回复用时', width='180')
+        template(slot-scope='scope')
+          | {{ scope.row.meta.createdAt,scope.row.problem.meta.createdAt | difference }}
+      el-table-column(prop='reply', label='信件回复', width='180')
+      el-table-column(prop='adminUser.nickname', label='回信管理员', width='180')
+    //    分页
+    el-pagination(background='', layout='prev, pager, next', :total='problemReply.count.length', @current-change="handleCurrentChange")
 </template>
 <script>
   import { mapState } from 'vuex'
-  import axios from 'axios'
-  import vSnackbar from '~components/snackbar'
+  import moment from 'moment'
 
   export default {
     middleware: 'auth',
@@ -62,6 +44,15 @@
       this.activePage = Number(this.$route.query.page)
       await this.$store.dispatch('fetchProblemReply', this.activePage)
     },
+    // 日期过滤
+    filters: {
+      momentDate (time) {
+        return moment(time).format("YYYY-DD-MM hh:mm:ss")
+      },
+      difference (replyTime, problemTime) {
+        return moment(problemTime).from(replyTime)
+      }
+    },
     mounted () {
       //待写
     },
@@ -76,32 +67,11 @@
           this.openSnackbar = true;
         }
       },
-      async pagination (num) {
-        if (Number(num)) {
-          num = Number(num)
-          this.activePage = num
-          this.$router.push({path: '/admin/solved?page=' + num})
-          this.$store.dispatch('fetchProblemReply', num)
-        } else {
-          if (this.activePage != 1 && num == 'prev'){
-
-            this.activePage = this.activePage - 1
-            this.$router.push({path: '/admin/solved?page=' + this.activePage})
-            this.$store.dispatch('fetchProblemReply', this.activePage)
-            console.log('prev')
-          }
-          else if (this.activePage < this.$store.state.problems.count.length && num == 'next') {
-            this.activePage = this.activePage + 1
-            this.$router.push({path: '/admin/solved?page=' + this.activePage})
-            this.$store.dispatch('fetchProblemReply', this.activePage)
-            console.log('next')
-
-          }
-        }
+      //  分页
+      async handleCurrentChange(val) {
+        await this.$store.dispatch('fetchProblems', val)
+        this.$router.push({path: '/admin/problem?page=' + val})
       }
-    },
-    components: {
-      vSnackbar
     }
   }
 </script>
