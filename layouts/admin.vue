@@ -1,6 +1,6 @@
 <template lang="pug">
   #app
-    v-header
+    // v-header
     #container
       v-aside
       nuxt

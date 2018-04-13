@@ -20,42 +20,27 @@ module.exports = {
     {
       src: '~static/css/main.css',
       lang: 'sass?indentedSyntax=true'
-    }
+    },
+    'element-ui/lib/theme-chalk/reset.css',
+    'element-ui/lib/theme-chalk/index.css'
   ],
   /*
   ** Customize the progress-bar color
   */
+  plugins: [
+    '~plugins/element-ui'
+  ],
   loading: { color: '#3B8070' },
   /*
    ** Build configuration
    */
   build: {
-    /*
-     ** Run ESLINT on save
-     */
-    /*extend (config, ctx) {
-      if (ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
-    }*/
-    loaders: [
-      {
-        test: /\.(png|jpe?g|gif|svg)$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'img/[name].[hash].[ext]'
+    extend (config, ctx) {
+      config.module.rules.forEach((rule) => {
+        if (rule.test.toString() === '/\\.vue$/') {
+          rule.query.optimizeSSR = false
         }
-      }
-    ],
-    loading: { color: '#F44336' },
-    performance: {
-      prefetch: false
+      })
     }
   }
 }
