@@ -50,6 +50,7 @@
     async created () {
       this.activePage = Number(this.$route.query.page)
       await this.$store.dispatch('fetchProblems', this.activePage)
+      console.log(this.problem)
     },
     computed: mapState([
       'problems'
@@ -63,18 +64,35 @@
     }
   }
 </script>
-<style scoped>
-  .demo-table-expand {
-    font-size: 0;
+<style>
+  .pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
   }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
+  .pagination>li {
+    display: inline;
   }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
+  .pagination>li:first-child>a, .pagination>li:first-child>span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  .pagination>li:last-child>a, .pagination>li:last-child>span {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+  .pagination>li>a, .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
   }
 </style>
 <style lang='sass', src='~static/sass/admin.sass', scoped/>

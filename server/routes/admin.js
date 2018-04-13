@@ -61,7 +61,7 @@ export class adminController {
     ctx.body = {
       success: true,
       data: list,
-      count: Math.round(count.length / 50) ? new Array(Math.round(count.length / 50)) : new Array(Math.round(count.length / 50) + 1)
+      count: Math.round(count.length / 50) ? Math.round(count.length / 50) * 10 : (Math.round(count.length / 50) + 1) * 10
     }
   }
 
@@ -157,10 +157,9 @@ export class adminController {
     if (!page) {
       page = 1
     }
-    console.log("请求的是第"+page+"页")
     let count = await Problem
       .find({solve: false})
-    console.log("未回复总长度："+count.length)
+
     let List = await Problem
       .find({solve: false})
       .populate('user')
@@ -171,7 +170,7 @@ export class adminController {
     ctx.body = {
       success: true,
       data: List,
-      count: Math.round(count.length / 50) ? Math.round(count.length / 50) : Math.round(count.length / 50) + 1
+      count: Math.round(count.length / 50) ? Math.round(count.length / 50) * 10 : (Math.round(count.length / 50) + 1) * 10
     }
   }
 
@@ -196,7 +195,7 @@ export class adminController {
     ctx.body = {
       success: true,
       data: List,
-      count: Math.round(count.length / 50) ? Math.round(count.length / 50) : Math.round(count.length / 50) + 1
+      count: Math.round(count.length / 50) ? Math.round(count.length / 50) * 10 : (Math.round(count.length / 50) + 1) * 10
     }
   }
 

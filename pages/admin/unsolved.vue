@@ -133,8 +133,8 @@
       },
       //  分页
       async handleCurrentChange(val) {
-        await this.$store.dispatch('fetchProblems', val)
-        this.$router.push({path: '/admin/problem?page=' + val})
+        await this.$store.dispatch('fetchUnsolvedProblems', val)
+        this.$router.push({path: '/admin/unsolved?page=' + val})
       }
     }
   }
