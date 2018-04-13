@@ -60,7 +60,7 @@ export default {
     const  res = await Services.fetchProblems(page)
 
     state.problems = res.data
-
+    console.log(res.data)
     return res
   },
   async fetchUnsolvedProblems ({ state }, page) {

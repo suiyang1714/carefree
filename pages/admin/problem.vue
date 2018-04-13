@@ -18,7 +18,7 @@
         template(slot-scope='scope')
           | {{ scope.row.meta.createdAt | momentDate }}
     //    分页
-    el-pagination(background='', layout='prev, pager, next', :total='problems.count.length', @current-change="handleCurrentChange")
+    el-pagination(background='', layout='prev, pager, next', :total='problems.count', @current-change="handleCurrentChange")
 </template>
 
 <script>

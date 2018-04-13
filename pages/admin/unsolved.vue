@@ -19,7 +19,7 @@
           el-button(@click.native.prevent='createUser(scope.$index, unsolvedproblems.data)', type='text', size='small')
             | 回信
     //    分页
-    el-pagination(background='', layout='prev, pager, next', :total='unsolvedproblems.count.length', @current-change="handleCurrentChange")
+    el-pagination(background='', layout='prev, pager, next', :total='unsolvedproblems.count', @current-change="handleCurrentChange")
     .edit-product(:class='{active: editing}')
       el-form(ref='form', :model='form', label-width='80px')
         h1  创建新回信

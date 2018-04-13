@@ -17,7 +17,7 @@
       el-table-column(prop='reply', label='信件回复', width='180')
       el-table-column(prop='adminUser.nickname', label='回信管理员', width='180')
     //    分页
-    el-pagination(background='', layout='prev, pager, next', :total='problemReply.count.length', @current-change="handleCurrentChange")
+    el-pagination(background='', layout='prev, pager, next', :total='problemReply.count', @current-change="handleCurrentChange")
 </template>
 <script>
   import { mapState } from 'vuex'
