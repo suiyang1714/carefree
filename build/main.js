@@ -218,13 +218,17 @@ var Server = function () {
     key: 'useMiddleWares',
     value: function useMiddleWares(app) {
       // i => `${r('./middleware')}/${i}`
+      // `${r('./middleware')}\\${i}.js`
+      // i => `./middleware/${i}.js`
+      /*
+      * Require => {
+          console.log(Require)
+          return require(`${Require}`)
+        },*/
       return __WEBPACK_IMPORTED_MODULE_3_ramda___default.a.map(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.compose(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.map(function (i) {
         return i(app);
-      }), function (Require) {
-        console.log(Require);
-        return !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-      }, function (i) {
-        return r('./middleware') + '\\' + i;
+      }), !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()), function (i) {
+        return r('./middleware') + '/' + i;
       }));
     }
   }, {

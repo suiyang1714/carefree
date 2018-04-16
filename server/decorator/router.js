@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import glob from 'glob'
 import _ from 'lodash'
 import R from 'ramda'
+import fs from 'fs'
 
 let reqID = 0
 const decorate = (args, middleware) => {
@@ -34,6 +35,12 @@ export default class Route {
   }
 
   init () {
+    // fs.readdirSync(this.apiPath)
+    //   .filter(file => ~file.search(/^[^\.].*js$/))
+    //   .forEach(file => {
+    //     console.log(file)
+    //     require(`../routes/${file}`)
+    //   });
     glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
 
     _.forIn(routersMap, (value, key) => {
