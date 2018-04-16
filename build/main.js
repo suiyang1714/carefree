@@ -87,39 +87,30 @@ module.exports = {
   css: [{
     src: '~static/css/main.css',
     lang: 'sass?indentedSyntax=true'
-  }],
+  }, 'element-ui/lib/theme-chalk/reset.css', 'element-ui/lib/theme-chalk/index.css'],
   /*
   ** Customize the progress-bar color
   */
+  plugins: ['~plugins/element-ui'],
   loading: { color: '#3B8070' },
   /*
    ** Build configuration
    */
   build: {
-    /*
-     ** Run ESLINT on save
-     */
-    /*extend (config, ctx) {
-      if (ctx.isClient) {
+    extend: function extend(config, ctx) {
+      /*if (ctx.isClient) {
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
-      }
-    }*/
-    loaders: [{
-      test: /\.(png|jpe?g|gif|svg)$/,
-      loader: 'url-loader',
-      query: {
-        limit: 10000,
-        name: 'img/[name].[hash].[ext]'
-      }
-    }],
-    loading: { color: '#F44336' },
-    performance: {
-      prefetch: false
+      }*/
+      config.module.rules.forEach(function (rule) {
+        if (rule.test.toString() === '/\\.vue$/') {
+          rule.query.optimizeSSR = false;
+        }
+      });
     }
   }
 };
@@ -180,8 +171,8 @@ module.exports = require("regenerator-runtime");
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {Object.defineProperty(exports, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_koa__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_koa___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_koa__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_nuxt__ = __webpack_require__(4);
@@ -226,20 +217,24 @@ var Server = function () {
   _createClass(Server, [{
     key: 'useMiddleWares',
     value: function useMiddleWares(app) {
+      // i => `${r('./middleware')}/${i}`
       return __WEBPACK_IMPORTED_MODULE_3_ramda___default.a.map(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.compose(__WEBPACK_IMPORTED_MODULE_3_ramda___default.a.map(function (i) {
         return i(app);
-      }), !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()), function (i) {
-        return r('./middleware') + '/' + i;
+      }), function (Require) {
+        console.log(Require);
+        return !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+      }, function (i) {
+        return r('./middleware') + '\\' + i;
       }));
     }
   }, {
     key: 'start',
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator___default.a.mark(function _callee2() {
+      var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator___default.a.mark(function _callee2() {
         var _this = this;
 
         var nuxt;
-        return __WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+        return __WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -272,8 +267,8 @@ var Server = function () {
               case 13:
 
                 this.app.use(function () {
-                  var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator___default.a.mark(function _callee(ctx, next) {
-                    return __WEBPACK_IMPORTED_MODULE_0_E_carefree_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                  var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator___default.a.mark(function _callee(ctx, next) {
+                    return __WEBPACK_IMPORTED_MODULE_0_E_carefree_element_ui_carefree_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
                       while (1) {
                         switch (_context.prev = _context.next) {
                           case 0:

@@ -20,10 +20,14 @@ class Server {
   }
 
   useMiddleWares (app) {
+    // i => `${r('./middleware')}/${i}`
     return R.map(R.compose(
       R.map(i => i(app)),
-      require,
-      i => `${r('./middleware')}/${i}`
+      Require => {
+        console.log(Require)
+        return require(Require)
+      },
+      i => `${r('./middleware')}\\${i}`
     ))
   }
 

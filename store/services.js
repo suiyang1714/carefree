@@ -1,6 +1,6 @@
 import axios from 'axios'
-const baseUrl = '';
-/*const apiUrl = 'http://rapapi.org/mockjsdata/29997';*/
+const baseUrl = ''
+// const apiUrl = 'http://rapapi.org/mockjsdata/29997';
 
 class Services {
   fetchUsers (url) {
@@ -12,7 +12,7 @@ class Services {
   fetchUnsolvedProblems (page) {
     return axios.get(`${baseUrl}/admin/unsolvedProblems?page=${page}`)
   }
-  fetchProblemReply (page){
+  fetchProblemReply (page) {
     return axios.get(`${baseUrl}/admin/replyList?page=${page}`)
   }
   deleteReply (_id) {

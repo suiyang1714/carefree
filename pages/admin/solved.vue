@@ -47,14 +47,14 @@
     // 日期过滤
     filters: {
       momentDate (time) {
-        return moment(time).format("YYYY-DD-MM hh:mm:ss")
+        return moment(time).format(`YYYY-DD-MM hh:mm:ss`)
       },
       difference (replyTime, problemTime) {
         return moment(problemTime).from(replyTime)
       }
     },
     mounted () {
-      //待写
+      // 待写
     },
     computed: mapState([
       'problemReply',
@@ -63,12 +63,12 @@
     methods: {
       async eidtDelete (item) {
         const result = await this.$store.dispatch('deleteReply', item._id)
-        if(result.success){
-          this.openSnackbar = true;
+        if (result.success) {
+          this.openSnackbar = true
         }
       },
-      //  分页
-      async handleCurrentChange(val) {
+      // 分页
+      async handleCurrentChange (val) {
         await this.$store.dispatch('fetchProblemReply', val)
         this.$router.push({path: '/admin/solved?page=' + val})
       }

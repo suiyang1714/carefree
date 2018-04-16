@@ -44,7 +44,7 @@
     },
     filters: {
       momentDate (time) {
-        return moment(time).format("YYYY-DD-MM hh:mm:ss")
+        return moment(time).format(`YYYY-DD-MM hh:mm:ss`)
       }
     },
     async created () {
@@ -57,7 +57,7 @@
     ]),
     methods: {
     //  分页
-      async handleCurrentChange(val) {
+      async handleCurrentChange (val) {
         await this.$store.dispatch('fetchProblems', val)
         this.$router.push({path: '/admin/problem?page=' + val})
       }

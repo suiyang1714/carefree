@@ -36,6 +36,14 @@ module.exports = {
    */
   build: {
     extend (config, ctx) {
+      /*if (ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        })
+      }*/
       config.module.rules.forEach((rule) => {
         if (rule.test.toString() === '/\\.vue$/') {
           rule.query.optimizeSSR = false

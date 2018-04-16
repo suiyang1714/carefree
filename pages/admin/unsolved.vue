@@ -74,7 +74,7 @@
     // 日期过滤
     filters: {
       momentDate (time) {
-        return moment(time).format("YYYY-DD-MM hh:mm:ss")
+        return moment(time).format(`YYYY-DD-MM hh:mm:ss`)
       },
       difference (time) {
         return moment(time).fromNow()
@@ -82,7 +82,7 @@
       }
     },
     mounted () {
-      //待写
+      // 待写
     },
     computed: mapState([
       'unsolvedproblems',
@@ -111,28 +111,26 @@
         this.editing = !this.editing
         const resolve = await this.$store.dispatch('addReply', this.form)
         if (resolve.success) {
-
           this.rowObject.splice(this.rowIndex, 1)
           // 弹框
-          const h = this.$createElement;
+          const h = this.$createElement
           this.$notify({
             title: '回复成功',
-            message: h('i', { style: 'color: teal'}, `您以${this.$store.state.user.nickname}名义回复成功`),
+            message: h('i', {style: 'color: teal'}, `您以${this.$store.state.user.nickname}名义回复成功`),
             duration: 3000
-          });
+          })
         } else {
           // 弹框
-          const h = this.$createElement;
+          const h = this.$createElement
           this.$notify({
             title: '回复失败',
-            message: h('i', { style: 'color: teal'}, '请向开发者反馈该问题'),
+            message: h('i', {style: 'color: teal'}, '请向开发者反馈该问题'),
             duration: 3000
-          });
-
+          })
         }
       },
       //  分页
-      async handleCurrentChange(val) {
+      async handleCurrentChange (val) {
         await this.$store.dispatch('fetchUnsolvedProblems', val)
         this.$router.push({path: '/admin/unsolved?page=' + val})
       }

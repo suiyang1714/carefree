@@ -4,7 +4,7 @@ import axios from 'axios'
 export default {
   nuxtServerInit ({ commit }, { req }) {
     if (req.session && req.session.user) {
-      const { email, nickname, avatarUrl } = req.session.user
+      const { email, nickname } = req.session.user
       const user = {
         email,
         nickname
@@ -39,47 +39,43 @@ export default {
     await axios.post('/admin/logout')
     commit('SET_USER', null)
   },
-  async addUser ({ state, dispatch }, userMsg ) {
-
-    await axios.post('/admin/addUser',  userMsg)
+  async addUser ({ state, dispatch }, userMsg) {
+    await axios.post('/admin/addUser', userMsg)
 
     let res = await dispatch('fetchUsers')
 
     return res.data.data
   },
   async fetchUsers ({ state }) {
-
-    const  res = await Services.fetchUsers()
+    const res = await Services.fetchUsers()
 
     state.users = res.data.data
 
     return res
   },
   async fetchProblems ({ state }, page) {
-
-    const  res = await Services.fetchProblems(page)
+    const res = await Services.fetchProblems(page)
 
     state.problems = res.data
+
     return res
   },
   async fetchUnsolvedProblems ({ state }, page) {
-
-    const  res = await Services.fetchUnsolvedProblems(page)
+    const res = await Services.fetchUnsolvedProblems(page)
 
     state.unsolvedproblems = res.data
 
     return res
   },
   async addReply ({ state }, reply) {
-
     reply.email = state.user.email
+
     await axios.post('/admin/addReply', reply)
 
     return { success: true }
   },
   async fetchProblemReply ({ state }, page) {
-
-    const  res = await Services.fetchProblemReply(page)
+    const res = await Services.fetchProblemReply(page)
 
     state.problemReply = res.data
 
@@ -87,10 +83,9 @@ export default {
   },
   async deleteReply ({ state, dispatch }, id) {
     const res = await Services.deleteReply(id)
-    /*const res =  await axios.post('/admin/deleteReply', id)*/
-    let list = await dispatch('fetchProblemReply')
+    // const res =  await axios.post('/admin/deleteReply', id)
+    await dispatch('fetchProblemReply')
 
     return res.data
-
   }
 }

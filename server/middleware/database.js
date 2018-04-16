@@ -4,7 +4,6 @@ import mongoose from 'mongoose'
 import config from '../config'
 
 const models = resolve(__dirname, '../database/schema');
-
 fs.readdirSync(models)
   .filter(file => ~file.search(/^[^\.].*js$/))
   .forEach(file => require(resolve(models, file)));

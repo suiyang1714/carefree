@@ -37,8 +37,6 @@
 
 <script>
   import { mapState } from 'vuex'
-  import axios from 'axios'
-  import vSnackbar from '~components/snackbar'
 
   export default {
     middleware: 'auth',
@@ -98,30 +96,27 @@
         this.isProduct = false
 
         // 弹框
-        const h = this.$createElement;
+        const h = this.$createElement
         this.$notify({
           title: '创建成功',
-          message: h('i', { style: 'color: teal'}, '该账号的权限为普通管理员'),
+          message: h('i', {style: 'color: teal'}, '该账号的权限为普通管理员'),
           duration: 3000
-        });
+        })
 
         this.form = {}
         this.editing = !this.editing
       },
       // 删除管理员
-      deleteRow(index, rows) {
+      deleteRow (index, rows) {
         // 后续再做吧
         // rows.splice(index, 1);
-        const h = this.$createElement;
+        const h = this.$createElement
         this.$notify({
           title: '删除失败',
-          message: h('i', { style: 'color: teal'}, '该账号没有权限删除用户'),
+          message: h('i', {style: 'color: teal'}, '该账号没有权限删除用户'),
           duration: 3000
-        });
+        })
       }
-    },
-    components: {
-      vSnackbar
     }
   }
 </script>
